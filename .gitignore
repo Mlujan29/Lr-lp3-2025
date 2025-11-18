@@ -36,3 +36,6 @@ build/
 mvnw
 mvnw.cmd
 
+### EXCLUSIONES PERSONALIZADAS ###
+# Ignorar el archivo de configuración local que contiene las contraseñas
+/src/main/resources/application.properties
