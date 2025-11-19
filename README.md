@@ -17,7 +17,7 @@ Asegúrate de tener instalado el siguiente software en tu entorno local:
 ---
 ## 2. Puesta en Marcha (Conexión a MySQL)
 
-Para ejecutar la aplicación, es necesario configurar la base de datos y el usuario con las credenciales que usará Spring Boot.
+Luego de descargar el repositorio, para ejecutar la aplicación, es necesario configurar la base de datos y el usuario con las credenciales que usará Spring Boot.
 
 ### 2.1. Configuración de la Base de Datos y el Usuario
 
@@ -42,12 +42,24 @@ GRANT ALL PRIVILEGES ON lp3_db.* TO 'proyecto_user'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
 ```
-### 2.2. Configuración del Proyecto (Credenciales)
+### 2.2. Verificación de Dependencia
+Asegúrate de que el archivo `pom.xml` contenga la dependencia mysql-connector-java para que Maven pueda descargar el driver necesario.
+
+### 2.3. Configuración del Proyecto (Credenciales)
+En tu directorio descargado.
 Para que la aplicación pueda conectar, debes configurar las credenciales en el archivo local de configuración:
 
   1. Modifica la plantilla: El repositorio contiene el archivo `application.properties.template`. En tu carpeta debes renombrarlo a `application.properties`. (Este paso es crucial para que el archivo pueda ejecutarse).
   
   2. Añade las credenciales: Abre el nuevo archivo application.properties y reemplaza `spring.datasource.username=NOMBRE_DE_USUARIO` y `spring.datasource.password=AQUI_VA_TU_CONTRASEÑA_LOCAL` con el nombre de usuario y contraseña que creaste en el paso anterior.   (En este caso `proyecto_user` y su contraseña)
+
+#### Ejemplo de la configuración final:
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/lp3_db?serverTimezone=UTC
+spring.datasource.username=proyecto_user        #O tu nombre de usuario
+spring.datasource.password=TU_CONTRASEÑA_LOCAL
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+```
 
 ---
 ## 3. Ejecución del Proyecto
