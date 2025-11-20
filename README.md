@@ -1,73 +1,41 @@
-# Guía de Configuración: Proyecto Spring Boot con MySQL
+# Dockerización Spring Boot con MySQL
 
-Este proyecto utiliza Spring Boot con Maven y requiere una conexión a MySQL para su ejecución.
+Este proyecto es una adaptación del template de LP3 para utilizar persistencia de datos en **MySQL**.
 
----
+> **Nota:** Se ha migrado la base de datos original (H2) a MySQL Server 8.
 
-## 1. Requisitos del Sistema
+## Ejecución con Docker Compose
 
-Asegúrate de tener instalado el siguiente software en tu entorno local:
+Este proyecto incluye configuración para ejecutarse en contenedores Docker, orquestando la aplicación y la base de datos automáticamente.
 
-| Requisito | Versión Mínima | Notas |
-| :--- | :--- | :--- |
-| **Java Development Kit (JDK)** | 17 o superior | Necesario para compilar y ejecutar el proyecto Spring Boot. |
-| **MySQL Server** | 8.0 o superior | La base de datos persistente requerida. |
-| **Maven** | 3.6 o superior | (Generalmente incluido en IntelliJ IDEA). |
+### Requisitos
 
----
-## 2. Puesta en Marcha (Conexión a MySQL)
+* Docker y Docker Compose instalados.
 
-Luego de descargar el repositorio, para ejecutar la aplicación, es necesario configurar la base de datos y el usuario con las credenciales que usará Spring Boot.
+### Paso a Paso
 
-### 2.1. Configuración de la Base de Datos y el Usuario
-
-Accede a tu consola de MySQL (usando `sudo mysql` en la terminal si estás en Ubuntu) y ejecuta los siguientes comandos:
-
-#### A. Creación de la Base de Datos
-
-```sql
--- Crea la base de datos vacía
-CREATE DATABASE lp3_db;    #nombre de ejemplo
-```
-#### B. Creación del Usuario de la Aplicación
-Creamos el usuario `proyecto_user` con una contraseña, y le otorgamos permisos exclusivos sobre la base de datos lp3_db.
-```sql
--- 1. Crear el usuario (reemplaza 'TU_CONTRASEÑA_LOCAL' por una contraseña segura)
-CREATE USER 'proyecto_user'@'localhost' IDENTIFIED BY 'TU_CONTRASEÑA_LOCAL';    #nombre y contraseñas de ejemplo
-
--- 2. Otorgar permisos al nuevo usuario
-GRANT ALL PRIVILEGES ON lp3_db.* TO 'proyecto_user'@'localhost';
-
--- 3. Aplicar los cambios y salir
-FLUSH PRIVILEGES;
-EXIT;
-```
-### 2.2. Verificación de Dependencia
-Asegúrate de que el archivo `pom.xml` contenga la dependencia mysql-connector-java para que Maven pueda descargar el driver necesario.
-
-### 2.3. Configuración del Proyecto (Credenciales)
-En tu directorio descargado.
-Para que la aplicación pueda conectar, debes configurar las credenciales en el archivo local de configuración:
-
-  1. Modifica la plantilla: El repositorio contiene el archivo `application.properties.template`. En tu carpeta debes renombrarlo a `application.properties`. (Este paso es crucial para que el archivo pueda ejecutarse).
-  
-  2. Añade las credenciales: Abre el nuevo archivo application.properties y reemplaza `spring.datasource.username=NOMBRE_DE_USUARIO` y `spring.datasource.password=AQUI_VA_TU_CONTRASEÑA_LOCAL` con el nombre de usuario y contraseña que creaste en el paso anterior.   (En este caso `proyecto_user` y su contraseña)
-
-#### Ejemplo de la configuración final:
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/lp3_db?serverTimezone=UTC
-spring.datasource.username=proyecto_user        #O tu nombre de usuario
-spring.datasource.password=TU_CONTRASEÑA_LOCAL
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+1. **Configurar credenciales:**
+Crear un archivo ```.env``` en la raíz del proyecto tomando como base el ejemplo:
+```bash
+cp env.sample .env
 ```
 
----
-## 3. Ejecución del Proyecto
-- Desde IntelliJ IDEA (Recomendado)
-  1. Abre el proyecto en IntelliJ.
+(El archivo .env está configurado con credenciales por defecto, puedes cambiarlas por seguridad).
 
-  2. Espera a que Maven descargue todas las dependencias.
+2. **Iniciar la aplicación:**
+Ejecutar el siguiente comando para construir y levantar los servicios:
+```bash
+docker compose up --build
+```
 
-  3. Ejecuta la clase principal ([Nombre del Proyecto]Application.java) haciendo clic en el botón de "Play".
----
-####  Nota: Si la aplicación inicia correctamente sin errores en la consola (buscando el mensaje Started [Nombre de tu App] in X seconds), la conexión a MySQL es exitosa.
+3. **Acceso:**
+
+* **API Spring Boot:** Disponible en ```http://localhost:8081/api/lp3/persona/``` (Note el puerto 8081).
+
+* **Base de Datos:** Accesible desde el host en el puerto **3307.**
+
+4. **Detener:**
+Para apagar los contenedores:
+```bash
+docker compose down
+```
