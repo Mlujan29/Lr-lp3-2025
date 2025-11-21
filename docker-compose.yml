@@ -1,0 +1,34 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: springboot_mysql_lp3
+    restart: always
+    environment:
+      # OJO: Asegúrate que en tu .env las variables se llamen igual
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "3307:3306" # configuración del puerto
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # --- Agregado ---
+  app:
+    build: .  # Esto le dice: "Busca el Dockerfile en esta misma carpeta y úsalo"
+    container_name: springboot_app_lp3
+    restart: on-failure
+    ports:
+      - "8081:8080" # El puerto que pide la tarea (8081 host -> 8080 contenedor)
+    depends_on:
+      - db    # Le dice a Docker: "No arranques esto hasta que 'db' esté listo"
+    environment:
+      # Aquí conectamos la App con la Base de Datos
+      # Fíjate que usamos 'db' en la URL porque así llamamos al servicio de arriba
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${DB_NAME}?allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+
+volumes:
+  mysql_data:
