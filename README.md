@@ -66,7 +66,7 @@ curl -v http://localhost:8081/api/lp3/persona/
 [{"id":1,"nombre":"Ana","sexo":"F","apellido":"Gomez","edad":25,"numeroCedula":4567890}]
 ```
 
-2. **Consultar una persona por ID (GET)**
+3. **Consultar una persona por ID (GET)**
 Reemplaza el 1 al final de la URL por el ID que quieras buscar.
 
 ```bash
