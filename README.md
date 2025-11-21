@@ -34,7 +34,46 @@ docker compose up --build
 
 * **Base de Datos:** Accesible desde el host en el puerto **3307.**
 
-4. **Detener:**
+
+### Pruebas Manuales (Ejemplos CURL)
+
+Una vez iniciados los contenedores, puedes utilizar estos comandos en tu terminal para cargar datos y verificar que la API funciona correctamente.
+
+1. **Cargar una nueva Persona (POST)**
+Este comando inserta un registro en la base de datos MySQL a través de la API.
+
+```bash
+curl -X POST http://localhost:8081/api/lp3/persona \
+     -H "Content-Type: application/json" \
+     -d '{
+           "nombre": "Ana",
+           "apellido": "Gomez",
+           "edad": 25,
+           "numeroCedula": 4567890,
+           "sexo": "F"
+         }'
+```
+
+2. **Consultar todas las Personas (GET)**
+Este comando recupera la lista completa de personas guardadas.
+
+```bash
+curl -v http://localhost:8081/api/lp3/persona/
+```
+#### Salida esperada (ejemplo)
+
+``` JSON
+[{"id":1,"nombre":"Ana","sexo":"F","apellido":"Gomez","edad":25,"numeroCedula":4567890}]
+```
+
+2. **Consultar una persona por ID (GET)**
+Reemplaza el 1 al final de la URL por el ID que quieras buscar.
+
+```bash
+curl -v http://localhost:8081/api/lp3/persona/1
+```
+
+### Para detener
 Para apagar los contenedores:
 ```bash
 docker compose down
